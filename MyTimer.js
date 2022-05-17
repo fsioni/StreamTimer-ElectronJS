@@ -2,13 +2,20 @@ const fs = require("fs");
 const path = require("path");
 
 class MyTimer {
-    constructor(_time, _saveFile = path.join(__dirname, "timer.txt")) {
+    const
+    defaultSavefile = path.join(__dirname, "timer.txt");
+
+    constructor(_time, _saveFile) {
         this.startTime = _time
         this.time = this.startTime;
         this.isPlaying = false;
         this.interval = null;
-        this.saveFile = _saveFile;
+        this.saveFile = (typeof _saveFile === undefined) ? this.defaultSavefile : _saveFile;
         console.log("Timer created with " + _time + " seconds");
+    }
+
+    changeSavefile = (_savefile) => {
+        this.saveFile = _savefile;
     }
 
     startTimer = () => {
@@ -33,7 +40,7 @@ class MyTimer {
     }
 
     processTimer = () => {
-        if (this.time <= 0 || this.isPlaying == false) {
+        if (this.time <= 0 || this.isPlaying === false) {
             this.stopTimer();
             return;
         }

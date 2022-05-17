@@ -1,4 +1,4 @@
-const {app, BrowserWindow, dialog, ipcMain, ipcRenderer} = require('electron')
+const {app, BrowserWindow, dialog, ipcMain} = require('electron')
 const path = require("path");
 
 const createWindow = () => {
@@ -36,7 +36,7 @@ const initWindow = () => {
 async function openWindowSelectFile() {
     const {canceled, filePaths} = await dialog.showOpenDialog({properties: ['openFile']})
     if (canceled) {
-        return
+        return null;
     } else {
         return filePaths[0]
     }
