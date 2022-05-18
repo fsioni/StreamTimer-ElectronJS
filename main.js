@@ -1,10 +1,25 @@
 const {app, BrowserWindow, dialog, ipcMain} = require('electron')
+const windowStateKeeper = require('electron-window-state');
 const path = require("path");
 
+let win;
+let mainWindowState
+
 const createWindow = () => {
-    const win = new BrowserWindow({
-        width: 800,
-        height: 600,
+    mainWindowState = windowStateKeeper({
+        defaultWidth: 1000,
+        defaultHeight: 800
+    })
+
+    win = new BrowserWindow({
+        x: mainWindowState.x,
+        y: mainWindowState.y,
+        width: mainWindowState.width,
+        height: mainWindowState.height,
+        resizable: false,
+        title: "Stream Timer",
+        autoHideMenuBar: true,
+        icon: path.join(__dirname, 'icon.png'),
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: false,
@@ -13,6 +28,7 @@ const createWindow = () => {
     });
 
     win.webContents.openDevTools();
+
     win.loadFile('index.html');
 }
 
@@ -22,6 +38,8 @@ app.whenReady().then(() => {
 })
 
 const initWindow = () => {
+    mainWindowState.manage(win);
+
     app.on('window-all-closed', () => {
         if (process.platform !== 'darwin') app.quit()
     });
@@ -34,7 +52,12 @@ const initWindow = () => {
 }
 
 async function openWindowSelectFile() {
-    const {canceled, filePaths} = await dialog.showOpenDialog({properties: ['openFile']})
+    const {canceled, filePaths} = await dialog.showOpenDialog({
+        filters: [{name: 'Text files', extensions: ['txt']}],
+        properties: [
+            'openFile']
+
+    })
     if (canceled) {
         return null;
     } else {
