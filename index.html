@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <title>Stream Timer</title>
 </head>
+<style>body {
+    user-select: none;
+}</style>
 <body>
 <button id="btnStartTimer">Start</button>
 <button id="btnResumeTimer">Resume</button>
@@ -11,5 +14,12 @@
 <p id="txtTimer"></p>
 
 <button id="btnSelectFile">Select output file</button>
+<div>
+    <label for="txtTextOnEnd">Text on end</label><br>
+    <input id="txtTextOnEnd" type="text"></div>
+<div>
+    <input id="cbAutoStart" name="cbAutoStart" type="checkbox">
+    <label for="cbAutoStart">Automatic Start</label>
+</div>
 </body>
 </html>

@@ -3,25 +3,10 @@ const MyTimer = require(path.join(__dirname, "MyTimer.js"));
 const {ipcRenderer} = require('electron');
 
 let time;
-let savefile = undefined;
 
-function StartTimer() {
-    console.log("Start timer");
+function CheckTimerOrCreate() {
     if (!time) {
-        time = new MyTimer(65, savefile);
-    }
-    time.startTimer();
-}
-
-function StopTimer() {
-    if (time) {
-        time.stopTimer();
-    }
-}
-
-function ResumeTimer() {
-    if (time) {
-        time.resumeTimer();
+        time = new MyTimer(3606);
     }
 }
 
@@ -30,21 +15,49 @@ const addEventToButtonWithId = (id, fnc) => {
     btn.addEventListener("click", fnc);
 }
 
+const addEventToInputTextWithId = (id, fnc) => {
+    let input = document.getElementById(id);
+    input.addEventListener("input", fnc);
+}
+
+const addEventToCheckboxWithId = (id, fn1, fn2) => {
+    let checkbox = document.getElementById(id);
+    checkbox.addEventListener('change', function () {
+        if (this.checked) {
+            fn1(this.checked);
+        } else {
+            fn2(this.checked);
+        }
+    });
+}
+
+
 window.addEventListener("DOMContentLoaded", () => {
-    addEventToButtonWithId("btnStartTimer", StartTimer);
-    addEventToButtonWithId("btnStopTimer", StopTimer);
-    addEventToButtonWithId("btnResumeTimer", ResumeTimer);
+    CheckTimerOrCreate()
+    addEventToButtonWithId("btnStartTimer", () => {
+        time.startTimer()
+    });
+    addEventToButtonWithId("btnStopTimer", () => {
+        time.stopTimer()
+    });
+    addEventToButtonWithId("btnResumeTimer", () => {
+        time.resumeTimer()
+    });
     addEventToButtonWithId("btnSelectFile", ChangeSelectedOutput)
+    addEventToInputTextWithId('txtTextOnEnd', () => {
+        time.setTextOnEnd(document.getElementById('txtTextOnEnd').value)
+    })
+    document.getElementById('txtTextOnEnd').value = (time.textOnEnd) ? time.textOnEnd : ""
+
+    document.getElementById('cbAutoStart').checked = time.automaticStart;
+    let autoStartFnc = (_checked) => {
+        time.setAutoStart(_checked)
+    }
+    addEventToCheckboxWithId("cbAutoStart", autoStartFnc, autoStartFnc)
 })
 
 const ChangeSelectedOutput = () => {
     return ipcRenderer.invoke('open-select-output-file-window').then(r => {
-        ChangeSavefile(r);
+        time.changeSavefile(r);
     })
-}
-
-const ChangeSavefile = (_savefile) => {
-    savefile = _savefile;
-    if (time) time.changeSavefile(_savefile)
-    console.log('New savefile : ' + savefile)
 }
