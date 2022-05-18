@@ -5,11 +5,15 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "watch": "nodemon --exec electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "fsioni",
   "license": "ISC",
   "devDependencies": {
     "electron": "^18.2.3"
+  },
+  "dependencies": {
+    "electron-window-state": "^5.0.3"
   }
 }
