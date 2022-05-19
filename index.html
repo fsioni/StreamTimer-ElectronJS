@@ -8,18 +8,44 @@
     user-select: none;
 }</style>
 <body>
+<div id="TimeGoal">
+    <p>Time goal :</p>
+    <label for="timeGoalHours">Hours</label>
+    <input id="timeGoalHours" min="0" type="number" value="0">
+    <label for="timeGoalMinutes">Minutes</label>
+    <input id="timeGoalMinutes" max="59" min="0" type="number" value="1">
+    <label for="timeGoalSeconds">Seconds</label>
+    <input id="timeGoalSeconds" max="59" min="0" type="number" value="0">
+</div>
+
 <button id="btnStartTimer">Start</button>
-<button id="btnResumeTimer">Resume</button>
-<button id="btnStopTimer">Stop</button>
+<button hidden id="btResumeStopTimer"></button>
 <p id="txtTimer"></p>
 
+<div id="TimeAd">
+    <p>Add time :</p>
+    <label for="timeAddHours">Hours</label>
+    <input id="timeAddHours" min="0" type="number" value="0">
+    <label for="timeAddMinutes">Minutes</label>
+    <input id="timeAddMinutes" max="59" min="0" type="number" value="1">
+    <label for="timeAddSeconds">Seconds</label>
+    <input id="timeAddSeconds" max="59" min="0" type="number" value="0">
+    <button id="btnAddTime">Add</button>
+</div>
+
+<br>
+
 <button id="btnSelectFile">Select output file</button>
-<div>
+<div id="autoStart">
     <label for="txtTextOnEnd">Text on end</label><br>
     <input id="txtTextOnEnd" type="text"></div>
 <div>
     <input id="cbAutoStart" name="cbAutoStart" type="checkbox">
     <label for="cbAutoStart">Automatic Start</label>
+</div>
+<div id="playAudio">
+    <input id="cbPlayAudio" name="cbPlayAudio" type="checkbox">
+    <label for="cbPlayAudio">Audio on end</label>
 </div>
 </body>
 </html>

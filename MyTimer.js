@@ -2,30 +2,43 @@ const fs = require("fs");
 const path = require("path");
 
 const defaultSaveFile = path.join(__dirname, "timer.txt");
-const ConfigFile = path.join(__dirname, "config.txt");
+const defaultAudioOnEnd = path.join(__dirname, "audio.mp3");
+const ConfigFile = path.join(__dirname, "config.json");
 
 class MyTimer {
-    constructor(_time, _textOnEnd) {
+    constructor(_time, _btnResumeStop) {
         let config = this.loadConfiguration()
         this.startTime = _time
         this.time = this.startTime;
         this.isPlaying = false;
         this.interval = null;
         this.saveFile = null;
-        this.changeSavefile(defaultSaveFile)
         this.automaticStart = false;
-        this.textOnEnd = _textOnEnd;
+        this.btnResumeStop = _btnResumeStop;
+        this.audioPath = null; //path to audio file
+        this.playAudioOnEnd = false;
 
         if (config) {
             this.startTime = config.startTime;
-            this.changeSavefile(config.saveFile);
+            this.saveFile = config.saveFile;
             this.automaticStart = config.automaticStart;
             this.textOnEnd = config.textOnEnd;
+            this.audioPath = config.audioOnEnd;
+            this.playAudioOnEnd = config.playAudioOnEnd;
         }
 
+        this.saveFile = (!this.saveFile) ? this.saveFile = defaultSaveFile : this.saveFile;
+        this.audioPath = (!this.audioPath) ? this.audioPath = defaultAudioOnEnd : this.audioPath;
+        this.updateAudio();
         console.log("Timer created with " + _time + " seconds at " + this.saveFile);
 
         if (this.automaticStart) this.startTimer();
+    }
+
+    updateAudio = () => {
+        if (this.audioPath) {
+            this.audio = new Audio(this.audioPath);
+        }
     }
 
     changeSavefile = (_savefile) => {
@@ -39,15 +52,17 @@ class MyTimer {
             startTime: this.startTime,
             saveFile: this.saveFile,
             automaticStart: this.automaticStart,
-            textOnEnd: this.textOnEnd
+            textOnEnd: this.textOnEnd,
+            audioPath: this.audioPath,
+            playAudioOnEnd: this.playAudioOnEnd
         }
 
         let JsonConfiguration = JSON.stringify(config)
+        console.log(JsonConfiguration)
         fs.writeFile(ConfigFile, JsonConfiguration, function (err) {
             if (err) throw err;
+            console.log('Configuration saved');
         })
-
-        console.log("Configuration saved");
     }
 
     loadConfiguration = () => {
@@ -67,6 +82,39 @@ class MyTimer {
             this.interval = setInterval(this.processTimer, 1000);
         }
         this.isPlaying = true;
+        this.btnResumeStop.hidden = false;
+        this.btnResumeStop.innerText = "Stop";
+    }
+
+    convertTimeToSeconds = (_h, _m, _s) => {
+        return Number(_h) * 3600 + Number(_m) * 60 + Number(_s);
+    }
+
+    changeStartTime = (_time) => {
+        console.log("New start time : " + _time);
+        if (_time !== this.startTime) {
+            this.startTime = _time;
+            this.saveConfiguration();
+        }
+    }
+
+    addTime = (_time) => {
+        console.log(this.time)
+        if (this.time > 0) {
+            console.log("Added time : " + _time);
+            this.time += _time;
+            this.updateTexts()
+        }
+    }
+
+    handleResumeOrStop = () => {
+        if (this.isPlaying) {
+            this.stopTimer();
+            this.btnResumeStop.innerText = "Resume";
+        } else {
+            this.resumeTimer();
+            this.btnResumeStop.innerText = "Stop";
+        }
     }
 
     resumeTimer = () => {
@@ -78,23 +126,36 @@ class MyTimer {
 
     stopTimer = () => {
         clearInterval(this.interval);
+        this.interval = null;
         this.isPlaying = false;
     }
+
+    handleTimerEnd = () => {
+        this.btnResumeStop.hidden = true;
+        this.stopTimer();
+        if (this.playAudioOnEnd && this.audio) {
+            console.log("Playing audio");
+            this.audio.play();
+        }
+    }
+
 
     processTimer = () => {
         if (this.time <= 0 || this.isPlaying === false) {
             this.stopTimer();
             this.updateTexts(this.textOnEnd);
             return;
+        } else if (this.isPlaying) {
+            this.decreaseTimer();
         }
+        if (this.time <= 0) this.handleTimerEnd();
 
-        this.decreaseTimer();
         console.log(this.time)
     }
 
     decreaseTimer = () => {
         this.time--;
-        this.updateTexts(this.getTimeString())
+        this.updateTexts()
     }
 
     getTimeString = () => {
@@ -113,21 +174,35 @@ class MyTimer {
     }
 
     saveToFile = (timeString) => {
+        let textEnd = (this.textOnEnd) ? this.textOnEnd : "";
+        timeString = (timeString !== "00:00") ? timeString : textEnd;
         fs.writeFile(this.saveFile, timeString, function (err) {
             if (err) throw err;
         })
     }
 
-    updateTexts = (timeString) => {
-        console.log(timeString)
+    updateTexts = () => {
+        let timeString = this.getTimeString();
         if (!timeString) timeString = "";
-        document.getElementById("txtTimer").innerText = timeString;
+        let elementById = document.getElementById("txtTimer");
+        if (this.time > 0) {
+            elementById.innerText = timeString;
+        } else {
+            elementById.innerText = "Time's up!";
+        }
         this.saveToFile(timeString);
     }
 
     setAutoStart = (isChecked) => {
         if (this.automaticStart !== isChecked) {
             this.automaticStart = isChecked;
+            this.saveConfiguration();
+        }
+    }
+
+    setPlayAudioOnEnd = (isChecked) => {
+        if (this.playAudioOnEnd !== isChecked) {
+            this.playAudioOnEnd = isChecked;
             this.saveConfiguration();
         }
     }
