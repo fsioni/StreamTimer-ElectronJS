@@ -2,10 +2,10 @@
   "name": "streamtimer",
   "version": "0.0.1",
   "description": "A simple timer",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
     "start": "electron-forge start",
-    "watch": "nodemon --ignore config.json --exec electron .",
+    "watch": "nodemon --ignore public/config.json --exec electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "package": "electron-forge package",
     "make": "electron-forge make"
