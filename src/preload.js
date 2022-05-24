@@ -1,13 +1,17 @@
 const path = require("path");
 const MyTimer = require(path.join(__dirname, "MyTimer.js"));
+const Config = require(path.join(__dirname, "Config.js"));
+
+
 const {ipcRenderer} = require('electron');
 
 let time;
+let config;
 let btnResumeStop;
 
 function CheckTimerOrCreate() {
     if (!time) {
-        time = new MyTimer(60, btnResumeStop);
+        time = new MyTimer(btnResumeStop, config);
     }
 }
 
@@ -34,9 +38,13 @@ const addEventToCheckboxWithId = (id, fn1, fn2) => {
     });
 }
 
+const eventChangeIsUpdown = () => {
+    time.config.setIsCountdown(document.getElementById('radIsCountdown').checked)
+}
 
 window.addEventListener("DOMContentLoaded", () => {
     btnResumeStop = document.getElementById("btResumeStopTimer")
+    config = new Config();
     CheckTimerOrCreate()
 
     addEventToButtonWithId("btResumeStopTimer", () => {
@@ -47,7 +55,7 @@ window.addEventListener("DOMContentLoaded", () => {
     let m_start = document.getElementById("timeGoalMinutes");
     let s_start = document.getElementById("timeGoalSeconds");
 
-    let startTime = time.startTime;
+    let startTime = config.startTime;
     h_start.value = Math.floor(startTime / 3600);
     startTime -= h_start.value * 3600;
     m_start.value = Math.floor(startTime / 60);
@@ -65,7 +73,7 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     addEventToButtonWithId("btnStartTimer", () => {
-        time.changeStartTime(time.convertTimeToSeconds(h_start.value, m_start.value, s_start.value));
+        time.config.changeStartTime(time.convertTimeToSeconds(h_start.value, m_start.value, s_start.value));
         time.startTimer()
     });
 
@@ -88,20 +96,45 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 
     addEventToButtonWithId("btnSelectFile", ChangeSelectedOutput)
+    addEventToButtonWithId("btnSelectSound", ChangeSelectedSound)
     addEventToInputTextWithId('txtTextOnEnd', () => {
-        time.setTextOnEnd(document.getElementById('txtTextOnEnd').value)
+        time.config.setTextOnEnd(document.getElementById('txtTextOnEnd').value)
     })
-    document.getElementById('txtTextOnEnd').value = (time.textOnEnd) ? time.textOnEnd : ""
+    document.getElementById('txtTextOnEnd').value = (config.textOnEnd) ? config.textOnEnd : ""
+    addEventToInputTextWithId('txtOutputStyle', () => {
+        time.config.setOutputStyle(document.getElementById('txtOutputStyle').value)
+    })
+    document.getElementById('txtOutputStyle').value = (config.outputStyle) ? config.outputStyle : ""
 
-    document.getElementById('cbAutoStart').checked = time.automaticStart;
-    addEventToCheckboxWithId("cbAutoStart", time.setAutoStart, time.setAutoStart)
 
-    document.getElementById('cbPlayAudio').checked = time.playAudioOnEnd;
-    addEventToCheckboxWithId("cbPlayAudio", time.setPlayAudioOnEnd, time.setPlayAudioOnEnd)
+    document.getElementById('cbAutoStart').checked = config.automaticStart;
+    addEventToCheckboxWithId("cbAutoStart", time.config.setAutoStart, time.config.setAutoStart)
+
+    document.getElementById('cbPlayAudio').checked = config.playAudioOnEnd;
+    addEventToCheckboxWithId("cbPlayAudio", time.config.setPlayAudioOnEnd, time.config.setPlayAudioOnEnd)
+
+    let radIsCountdown = document.getElementById('radIsCountdown');
+    let radIsUpdown = document.getElementById('radIsUpdown');
+    radIsCountdown.addEventListener("change", () => {
+        eventChangeIsUpdown();
+    })
+    radIsUpdown.addEventListener("change", () => {
+        eventChangeIsUpdown();
+    })
+ 
+    radIsCountdown.checked = config.isCountdown;
+    radIsUpdown.checked = !config.isCountdown;
 })
 
 const ChangeSelectedOutput = () => {
     return ipcRenderer.invoke('open-select-output-file-window').then(r => {
-        time.changeSavefile(r);
+        time.config.changeSavefile(r);
+    })
+}
+
+const ChangeSelectedSound = () => {
+    return ipcRenderer.invoke('open-select-sound-window').then(r => {
+        time.config.changeSound(r);
+        time.updateAudio();
     })
 }

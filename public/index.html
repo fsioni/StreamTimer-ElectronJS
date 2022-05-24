@@ -10,6 +10,12 @@
 <body>
 <div id="TimeGoal">
     <p>Time goal :</p>
+    <div id="isCountdown">
+        <input id="radIsCountdown" name="TimerType" type="radio">
+        <label for="radIsCountdown">Countdown</label>
+        <input id="radIsUpdown" name="TimerType" type="radio">
+        <label for="radIsUpdown">Updown</label>
+    </div>
     <label for="timeGoalHours">Hours</label>
     <input id="timeGoalHours" min="0" type="number" value="0">
     <label for="timeGoalMinutes">Minutes</label>
@@ -36,9 +42,13 @@
 <br>
 
 <button id="btnSelectFile">Select output file</button>
-<div id="autoStart">
+<button id="btnSelectSound">Select sound on end</button>
+<div id="TextOnEnd">
     <label for="txtTextOnEnd">Text on end</label><br>
     <input id="txtTextOnEnd" type="text"></div>
+<div id="OutputStyle">
+    <label for="txtOutputStyle">Output style</label><br>
+    <input id="txtOutputStyle" type="text"></div>
 <div>
     <input id="cbAutoStart" name="cbAutoStart" type="checkbox">
     <label for="cbAutoStart">Automatic Start</label>
