@@ -9,6 +9,9 @@ class MyTimer {
         this.btnResumeStop = _btnResumeStop;
         this.isDone = false;
         this.audio = null;
+        this.txtTimer = document.getElementById("txtTimer");
+        this.txtTimer.parentNode.classList.add("hidden");
+        this.updateTexts();
 
         this.updateAudio();
         console.log("Timer created with " + this.time + " seconds at " + this.config.saveFile);
@@ -34,6 +37,8 @@ class MyTimer {
         this.isPlaying = true;
         this.btnResumeStop.hidden = false;
         this.btnResumeStop.innerText = "Stop";
+        this.txtTimer.parentNode.classList.remove("hidden");
+
     }
 
     convertTimeToSeconds = (_h, _m, _s) => {
@@ -70,6 +75,7 @@ class MyTimer {
         clearInterval(this.interval);
         this.interval = null;
         this.isPlaying = false;
+        this.txtTimer.parentNode.classList.add("hidden");
     }
 
     handleTimerEnd = () => {
@@ -99,12 +105,10 @@ class MyTimer {
 
     decreaseTimer = () => {
         this.time--;
-        this.updateTexts()
     }
 
     increaseTimer = () => {
         this.time++;
-        this.updateTexts()
     }
 
     getTimeString = () => {
@@ -131,8 +135,8 @@ class MyTimer {
 
     saveToFile = (timeString) => {
         let textEnd = (this.config.textOnEnd) ? this.config.textOnEnd : "";
-        console.log(this.isDone);
         timeString = (!this.isDone) ? timeString : textEnd;
+        console.log(timeString);
         fs.writeFile(this.config.saveFile, timeString, function (err) {
             if (err) throw err;
         })
@@ -141,11 +145,10 @@ class MyTimer {
     updateTexts = () => {
         let timeString = this.getTimeString();
         if (!timeString) timeString = "";
-        let elementById = document.getElementById("txtTimer");
         if (!this.isDone) {
-            elementById.innerText = timeString;
+            this.txtTimer.innerText = timeString;
         } else {
-            elementById.innerText = "Time's up!";
+            this.txtTimer.innerText = "Time's up!";
         }
         this.saveToFile(timeString);
     }
