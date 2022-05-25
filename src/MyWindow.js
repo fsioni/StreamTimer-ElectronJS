@@ -37,15 +37,15 @@ class MyWindow {
     createWindow = () => {
         console.log("createWindow");
         this.mainWindowState = windowStateKeeper({
-            defaultWidth: 1000,
-            defaultHeight: 800
+            defaultWidth: 300,
+            defaultHeight: 300
         })
 
         this.win = new BrowserWindow({
             x: this.mainWindowState.x,
             y: this.mainWindowState.y,
-            width: this.mainWindowState.width,
-            height: this.mainWindowState.height,
+            width: 400,
+            height: 800,
             resizable: false,
             title: "Stream Timer",
             autoHideMenuBar: true,
@@ -57,7 +57,7 @@ class MyWindow {
             }
         });
 
-        this.win.webContents.openDevTools();
+        //this.win.webContents.openDevTools();
 
         this.win.loadFile(path.join(__dirname, '../public/index.html'));
     }
