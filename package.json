@@ -8,7 +8,8 @@
     "watch": "nodemon --ignore public/config.json --exec electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "build-css": "npx tailwindcss -i ./src/main.css -o ./public/styles.css --watch"
   },
   "author": "fsioni",
   "license": "ISC",
@@ -18,7 +19,8 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.63",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.63",
     "@electron-forge/maker-zip": "^6.0.0-beta.63",
-    "electron": "^18.2.4"
+    "electron": "^18.2.4",
+    "tailwindcss": "^3.0.24"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
