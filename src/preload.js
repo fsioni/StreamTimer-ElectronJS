@@ -37,10 +37,7 @@ const addEventToCheckboxWithId = (id, fn1, fn2) => {
         }
     });
 }
-
-const eventChangeIsUpdown = () => {
-    time.config.setIsCountdown(document.getElementById('radIsCountdown').checked)
-}
+  
 
 window.addEventListener("DOMContentLoaded", () => {
     btnResumeStop = document.getElementById("btResumeStopTimer")
@@ -51,9 +48,20 @@ window.addEventListener("DOMContentLoaded", () => {
         time.handleResumeOrStop();
     });
 
+    let specificTimeInp = document.getElementById("specificTimeInput");
+    let specificTimeBut = document.getElementById("specificTimeButton");
     let h_start = document.getElementById("timeGoalHours");
     let m_start = document.getElementById("timeGoalMinutes");
     let s_start = document.getElementById("timeGoalSeconds");
+
+    specificTimeBut.addEventListener("click", () => {
+        if (specificTimeInp.value) {
+            let secondsToGoal = parseDateGoal(specificTimeInp.value);
+            time.config.changeStartTime(secondsToGoal);
+            time.startTimer()
+        }
+    });
+
 
     let startTime = config.startTime;
     h_start.value = Math.floor(startTime / 3600);
@@ -113,17 +121,20 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById('cbPlayAudio').checked = config.playAudioOnEnd;
     addEventToCheckboxWithId("cbPlayAudio", time.config.setPlayAudioOnEnd, time.config.setPlayAudioOnEnd)
 
-    let radIsCountdown = document.getElementById('radIsCountdown');
-    let radIsUpdown = document.getElementById('radIsUpdown');
-    radIsCountdown.addEventListener("change", () => {
-        eventChangeIsUpdown();
+    let tabCountdown = document.getElementById('tabCountdown');
+    let tabUpdown = document.getElementById('tabUpdown');
+    if (time.config.isCountdown) {
+        tabClick("countdown");
+    } else {
+        tabClick("updown");
+    }
+
+    tabCountdown.addEventListener("click", () => {
+        tabClick("countdown");
     })
-    radIsUpdown.addEventListener("change", () => {
-        eventChangeIsUpdown();
+    tabUpdown.addEventListener("click", () => {
+        tabClick("updown");
     })
- 
-    radIsCountdown.checked = config.isCountdown;
-    radIsUpdown.checked = !config.isCountdown;
 })
 
 const ChangeSelectedOutput = () => {
@@ -137,4 +148,39 @@ const ChangeSelectedSound = () => {
         time.config.changeSound(r);
         time.updateAudio();
     })
+
+}
+const parseDateGoal = (_timeGoal) => {
+    _timeGoal = _timeGoal.split(":");
+    let currentTime = new Date();
+    let _dateGoal = new Date();
+    _dateGoal.setHours(_timeGoal[0]);
+    _dateGoal.setMinutes(_timeGoal[1]);
+    _dateGoal.setSeconds(0);
+    if ((currentTime.getHours() > _timeGoal[0]) || (currentTime.getHours() == _timeGoal[0] && currentTime.getMinutes() > _timeGoal[1])) { // if the current time is after the time goal
+        _dateGoal.setDate(currentTime.getDate() + 1);
+    }
+    return (_dateGoal - currentTime) / 1000; // return the time remaining before goal in seconds
+}
+
+const tabClick = (tab) => {
+    if (tab === "updown") {
+        setTabActive(tabUpdown)
+        setTabInactive(tabCountdown)
+        time.config.setIsCountdown(false);
+    } else if (tab === "countdown") {
+        setTabActive(tabCountdown)
+        setTabInactive(tabUpdown)
+        time.config.setIsCountdown(true);
+    }
+}
+
+const setTabActive = (tab) => {
+    tab.className = "bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold";
+    tab.parentNode.className = "-mb-px mr-1";
+}
+
+const setTabInactive = (tab) => {
+    tab.className = "bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold";
+    tab.parentNode.className = "mr-1";
 }
