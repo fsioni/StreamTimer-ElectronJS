@@ -34,7 +34,6 @@ class Config {
         }
 
         let JsonConfiguration = JSON.stringify(config)
-        console.log(JsonConfiguration)
         fs.writeFile(ConfigFile, JsonConfiguration, function (err) {
             if (err) throw err;
             console.log('Configuration saved');
