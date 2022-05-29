@@ -1,107 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Stream Timer</title>
     <link href="./styles.css" rel="stylesheet">
 </head>
-<style>body {
-    user-select: none;
-}</style>
+<style>
+    body {
+        user-select: none;
+    }
+</style>
+
 <body>
-<ul class="flex border-b">
-    <li class="-mb-px mr-1">
-        <button class="bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold"
-                href="#"
-                id="tabCountdown">Countdown
+    <ul class="flex border-b">
+        <li class="-mb-px mr-1">
+            <button class="bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold" href="#" id="tabCountdown">Countdown
         </button>
-    </li>
-    <li class="mr-1">
-        <a class="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#"
-           id="tabUpdown">Updown</a>
-    </li>
-</ul>
-<main class="p-4">
-    <div class="sticky top-0 flex items-center bg-red-500 text-white text-sm font-bold px-4 py-3" role="alert">
-        <p id="txtTimer"></p>
-    </div>
-    <h5 class="justify-self-start text-gray-900 text-xl leading-tight font-medium mb-2">General settings</h5>
-    <div id="TimeGoal">
-        <div id="TimeGoalInputs">
-            <div class="flex justify-center m-1">
-                <div class="block p-6 rounded-lg shadow-lg bg-white max-w-lg w-4/5">
-                    <div id="SetTimeTimeGoalInputs">
-                        <h2>Specific time goal</h2>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                               id="specificTimeInput" type="time">
-                        <button class="button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                id="specificTimeButton">Start
+        </li>
+        <li class="mr-1">
+            <a class="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#" id="tabUpdown">Updown</a>
+        </li>
+        <li class="mr-1">
+            <a class="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#" id="tabSettings">Settings</a>
+        </li>
+    </ul>
+    <main class="p-4">
+        <div class="sticky top-0 flex items-center bg-red-500 text-white text-sm font-bold px-4 py-3" role="alert">
+            <p id="txtTimer"></p>
+        </div>
+        <h5 class="justify-self-start text-gray-900 text-xl leading-tight font-medium mb-2">Stream Timer</h5>
+        <div id="TimeGoal">
+            <div id="TimeGoalInputs">
+                <div class="flex justify-center m-1" id="SpecificTimeGoal">
+                    <div class="block p-6 rounded-lg shadow-lg bg-white max-w-lg w-4/5">
+                        <div id="SetTimeTimeGoalInputs">
+                            <h2>Specific time goal</h2>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="specificTimeInput" type="time">
+                            <button class="button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="specificTimeButton">Start
                         </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center m-1" id="TimeGoal">
+                    <div class="block p-6 rounded-lg shadow-lg bg-white max-w-lg w-4/5">
+                        <div id="SetTimeTimeGoalInputs">
+                            <h2>Time goal</h2>
+                            <label for="timeGoalHours">Hours</label>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="timeGoalHours" min="0" type="number" value="0">
+                            <label for="timeGoalMinutes">Minutes</label>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="timeGoalMinutes" max="59" min="0" type="number" value="1">
+                            <label for="timeGoalSeconds">Seconds</label>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="timeGoalSeconds" max="59" min="0" type="number" value="0">
+                        </div>
+                        <button class="button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="btnStartTimer">Start</button>
+                        <button class="button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" hidden id="btResumeStopTimer"></button>
                     </div>
                 </div>
             </div>
-            <div class="flex justify-center m-1">
-                <div class="block p-6 rounded-lg shadow-lg bg-white max-w-lg w-4/5">
-                    <div id="SetTimeTimeGoalInputs">
-                        <h2>Time goal</h2>
-                        <label for="timeGoalHours">Hours</label>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                               id="timeGoalHours" min="0" type="number" value="0">
-                        <label for="timeGoalMinutes">Minutes</label>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                               id="timeGoalMinutes" max="59" min="0" type="number" value="1">
-                        <label for="timeGoalSeconds">Seconds</label>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                               id="timeGoalSeconds" max="59" min="0" type="number" value="0">
-                    </div>
-                    <button id="btnStartTimer">Start</button>
-                    <button hidden id="btResumeStopTimer"></button>
+        </div>
+
+
+        <div class="flex justify-center m-1" id="AddTime">
+            <div class="block p-6 rounded-lg shadow-lg bg-white max-w-lg w-4/5">
+                <div id="TimeAd">
+                    <p>Add time :</p>
+                    <label for="timeAddHours">Hours</label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="timeAddHours" min="0" type="number" value="0">
+                    <label for="timeAddMinutes">Minutes</label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="timeAddMinutes" max="59" min="0" type="number" value="1">
+                    <label for="timeAddSeconds">Seconds</label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="timeAddSeconds" max="59" min="0" type="number" value="0">
+                    <button class="button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="btnAddTime">Add</button>
                 </div>
             </div>
         </div>
-    </div>
 
+        <div id="Settings">
+            <h6 class="text-gray-800 text-xl leading-tight font-small mb-2">Settings</h6>
 
-    <div class="flex justify-center m-1">
-        <div class="block p-6 rounded-lg shadow-lg bg-white max-w-lg w-4/5">
-            <div id="TimeAd">
-                <p>Add time :</p>
-                <label for="timeAddHours">Hours</label>
-                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                       id="timeAddHours" min="0" type="number" value="0">
-                <label for="timeAddMinutes">Minutes</label>
-                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                       id="timeAddMinutes" max="59" min="0" type="number" value="1">
-                <label for="timeAddSeconds">Seconds</label>
-                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                       id="timeAddSeconds" max="59" min="0" type="number" value="0">
-                <button id="btnAddTime">Add</button>
+            <button class="button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="btnSelectFile">Select output file</button>
+            <button class="button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="btnSelectSound">Select sound on end</button>
+            <div id="TextOnEnd">
+                <label for="txtTextOnEnd">Text on end</label><br>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="txtTextOnEnd" type="text"></div>
+            <div id="OutputStyle">
+                <label for="txtOutputStyle">Output style</label><br>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="txtOutputStyle" type="text"></div>
+            <div>
+                <input id="cbAutoStart" name="cbAutoStart" type="checkbox">
+                <label for="cbAutoStart">Automatic Start</label>
+            </div>
+            <div id="playAudio">
+                <input id="cbPlayAudio" name="cbPlayAudio" type="checkbox">
+                <label for="cbPlayAudio">Audio on end</label>
             </div>
         </div>
-    </div>
-
-
-    <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">Other settings</h5>
-
-    <button id="btnSelectFile">Select output file</button>
-    <button id="btnSelectSound">Select sound on end</button>
-    <div id="TextOnEnd">
-        <label for="txtTextOnEnd">Text on end</label><br>
-        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-               id="txtTextOnEnd" type="text"></div>
-    <div id="OutputStyle">
-        <label for="txtOutputStyle">Output style</label><br>
-        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-               id="txtOutputStyle" type="text"></div>
-    <div>
-        <input id="cbAutoStart" name="cbAutoStart" type="checkbox">
-        <label for="cbAutoStart">Automatic Start</label>
-    </div>
-    <div id="playAudio">
-        <input id="cbPlayAudio" name="cbPlayAudio" type="checkbox">
-        <label for="cbPlayAudio">Audio on end</label>
-    </div>
-</main>
+    </main>
 
 </body>
+
 </html>

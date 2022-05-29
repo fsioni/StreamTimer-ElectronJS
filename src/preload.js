@@ -3,7 +3,7 @@ const MyTimer = require(path.join(__dirname, "MyTimer.js"));
 const Config = require(path.join(__dirname, "Config.js"));
 
 
-const {ipcRenderer} = require('electron');
+const { ipcRenderer } = require('electron');
 
 let time;
 let config;
@@ -29,7 +29,7 @@ const addEventToInputTextWithId = (id, fnc) => {
 
 const addEventToCheckboxWithId = (id, fn1, fn2) => {
     let checkbox = document.getElementById(id);
-    checkbox.addEventListener('change', function () {
+    checkbox.addEventListener('change', function() {
         if (this.checked) {
             fn1(this.checked);
         } else {
@@ -37,7 +37,7 @@ const addEventToCheckboxWithId = (id, fn1, fn2) => {
         }
     });
 }
-  
+
 
 window.addEventListener("DOMContentLoaded", () => {
     btnResumeStop = document.getElementById("btResumeStopTimer")
@@ -123,6 +123,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     let tabCountdown = document.getElementById('tabCountdown');
     let tabUpdown = document.getElementById('tabUpdown');
+    let tabSettings = document.getElementById('tabSettings');
     if (time.config.isCountdown) {
         tabClick("countdown");
     } else {
@@ -134,6 +135,9 @@ window.addEventListener("DOMContentLoaded", () => {
     })
     tabUpdown.addEventListener("click", () => {
         tabClick("updown");
+    })
+    tabSettings.addEventListener("click", () => {
+        tabClick("settings");
     })
 })
 
@@ -164,14 +168,67 @@ const parseDateGoal = (_timeGoal) => {
 }
 
 const tabClick = (tab) => {
-    if (tab === "updown") {
-        setTabActive(tabUpdown)
-        setTabInactive(tabCountdown)
-        time.config.setIsCountdown(false);
-    } else if (tab === "countdown") {
+    switch (tab) {
+        case "updown":
+            setCountdownTab("inactive")
+            setSettingsTab("inactive")
+            setUpdownTab("active")
+            break;
+        case "countdown":
+            setUpdownTab("inactive")
+            setSettingsTab("inactive")
+            setCountdownTab("active")
+            break;
+        case "settings":
+            setCountdownTab("inactive")
+            setUpdownTab("inactive")
+            setSettingsTab("active")
+            break;
+
+        default:
+            console.error('Error');
+            break;
+    }
+}
+
+const setCountdownTab = (status) => {
+    if (status === "active") {
         setTabActive(tabCountdown)
         setTabInactive(tabUpdown)
+        setTabInactive(tabSettings)
         time.config.setIsCountdown(true);
+        document.getElementById("SpecificTimeGoal").classList.remove("hidden");
+        document.getElementById("TimeGoal").classList.remove("hidden");
+        document.getElementById("AddTime").classList.remove("hidden");
+    } else if (status === "inactive") {
+        document.getElementById("SpecificTimeGoal").classList.add("hidden");
+        document.getElementById("TimeGoal").classList.add("hidden");
+        document.getElementById("AddTime").classList.add("hidden");
+    }
+}
+
+const setUpdownTab = (status) => {
+    if (status === "active") {
+        setTabActive(tabUpdown)
+        setTabInactive(tabCountdown)
+        setTabInactive(tabSettings)
+        time.config.setIsCountdown(false);
+        document.getElementById("TimeGoal").classList.remove("hidden")
+        document.getElementById("AddTime").classList.remove("hidden")
+    } else if (status === "inactive") {
+        document.getElementById("TimeGoal").classList.add("hidden");
+        document.getElementById("AddTime").classList.add("hidden");
+    }
+}
+
+const setSettingsTab = (status) => {
+    if (status === "active") {
+        setTabInactive(tabCountdown)
+        setTabInactive(tabUpdown)
+        setTabActive(tabSettings)
+        document.getElementById("Settings").classList.remove("hidden");
+    } else if (status === "inactive") {
+        document.getElementById("Settings").classList.add("hidden");
     }
 }
 

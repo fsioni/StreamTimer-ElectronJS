@@ -1,5 +1,5 @@
 const windowStateKeeper = require("electron-window-state");
-const {BrowserWindow, app, ipcMain, dialog} = require("electron");
+const { BrowserWindow, app, ipcMain, dialog } = require("electron");
 const path = require("path");
 
 class MyWindow {
@@ -7,10 +7,11 @@ class MyWindow {
     mainWindowState = null;
 
     async openWindowSelectTextFile() {
-        const {canceled, filePaths} = await dialog.showOpenDialog({
-            filters: [{name: 'Text files', extensions: ['txt']}],
+        const { canceled, filePaths } = await dialog.showOpenDialog({
+            filters: [{ name: 'Text files', extensions: ['txt'] }],
             properties: [
-                'openFile']
+                'openFile'
+            ]
 
         })
         if (canceled) {
@@ -21,10 +22,11 @@ class MyWindow {
     }
 
     async openWindowSelectSoundFile() {
-        const {canceled, filePaths} = await dialog.showOpenDialog({
-            filters: [{name: 'Sound files', extensions: ['mp3', 'wav']}],
+        const { canceled, filePaths } = await dialog.showOpenDialog({
+            filters: [{ name: 'Sound files', extensions: ['mp3', 'wav'] }],
             properties: [
-                'openFile']
+                'openFile'
+            ]
 
         })
         if (canceled) {
@@ -57,7 +59,7 @@ class MyWindow {
             }
         });
 
-        //this.win.webContents.openDevTools();
+        this.win.webContents.openDevTools();
 
         this.win.loadFile(path.join(__dirname, '../public/index.html'));
     }
