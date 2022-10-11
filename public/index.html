@@ -54,8 +54,11 @@
                         <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                                id="timeGoalSeconds" max="59" min="0" type="number" value="0">
                     </div>
-                    <button id="btnStartTimer">Start</button>
-                    <button hidden id="btResumeStopTimer"></button>
+                    <button class="button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            id="btnStartTimer">Start
+                    </button>
+                    <button class="button bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" hidden
+                            id="btResumeStopTimer"></button>
                 </div>
             </div>
         </div>
@@ -75,7 +78,9 @@
                 <label for="timeAddSeconds">Seconds</label>
                 <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                        id="timeAddSeconds" max="59" min="0" type="number" value="0">
-                <button id="btnAddTime">Add</button>
+                <button class="button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        id="btnAddTime">Add
+                </button>
             </div>
         </div>
     </div>
@@ -83,8 +88,14 @@
 
     <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">Other settings</h5>
 
-    <button id="btnSelectFile">Select output file</button>
-    <button id="btnSelectSound">Select sound on end</button>
+    <button class="button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="btnSelectFile">
+        Select output file
+    </button>
+    .
+    <button class="button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-2"
+            id="btnSelectSound">
+        Select sound on end
+    </button>
     <div id="TextOnEnd">
         <label for="txtTextOnEnd">Text on end</label><br>
         <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
