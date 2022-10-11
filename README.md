@@ -7,7 +7,7 @@ A stream timer made with ElectronJS
 ![](mainscreen_sc01.png)
 ![](mainscreen_sc02.png)
 
-## Functionnalities
+## Functionalities
 
 - Countdown or updown timer
 - Set a specific time goal. eg. : timer until 10:31am.
