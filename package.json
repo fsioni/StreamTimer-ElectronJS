@@ -1,7 +1,7 @@
 {
   "name": "streamtimer",
   "version": "0.0.1",
-  "description": "A simple timer",
+  "description": "A simple timer that writes the time in a text file every second.",
   "main": "src/main.js",
   "scripts": {
     "start": "electron-forge start",
@@ -11,7 +11,7 @@
     "make": "electron-forge make",
     "build-css": "npx tailwindcss -i ./src/main.css -o ./public/styles.css --watch"
   },
-  "author": "fsioni",
+  "author": "Farès SIONI",
   "license": "ISC",
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.63",
@@ -50,6 +50,30 @@
           "name": "@electron-forge/maker-rpm",
           "config": {}
         }
+      ]
+    }
+  },
+  "build": {
+    "appId": "streamtimer",
+    "productName": "StreamTimer",
+    "copyright": "© 2022 Farès SIONI ",
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm"
+      ]
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
       ]
     }
   }
